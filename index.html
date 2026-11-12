@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Viral Commerce · Wi-Fi Money Group</title>
+<style>
+/* ===== Colorimetría: negro base, verdes del logo y líneas de color, tomados de los videos ===== */
+:root{
+  --black:#0A0C0A;
+  --panel:#121612;
+  --panel-2:#0E120E;
+  --field:#0B0E0B;
+  --green:#1FA43A;
+  --green-light:#5FD97A;
+  --green-deep:#0E6B2B;
+  --text:#F2F7F3;
+  --muted:#A7B7AB;
+  --line:rgba(95,217,122,.22);
+  --line-strong:rgba(95,217,122,.55);
+  --error:#FF7A6E;
+  --radius:16px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;min-height:100vh;color:var(--text);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  line-height:1.55;-webkit-font-smoothing:antialiased;
+  background:
+    radial-gradient(circle at 85% 0%,rgba(31,164,58,.20),transparent 38%),
+    radial-gradient(circle at 0% 100%,rgba(95,217,122,.10),transparent 40%),
+    var(--black);
+  background-attachment:fixed;
+}
+button{font:inherit;cursor:pointer}
+input,textarea,select{font:inherit}
+
+.brand-line{height:3px;background:linear-gradient(90deg,transparent,var(--green-deep),var(--green),var(--green-light),var(--green),transparent)}
+
+.shine{
+  background:linear-gradient(90deg,var(--green-deep),var(--green-light),var(--green),var(--green-deep));
+  background-size:300% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:shine 6s linear infinite;
+}
+@keyframes shine{from{background-position:0% 50%}to{background-position:300% 50%}}
+
+/* ===== Botones premium: reflejo que sigue al cursor y destello al pasar ===== */
+.shine-btn{
+  position:relative;overflow:hidden;isolation:isolate;
+  transition:transform .25s ease,box-shadow .35s ease,background-color .25s ease,color .25s ease,border-color .25s ease;
+}
+.shine-btn::before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:0;transition:opacity .35s ease;
+  background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.42),rgba(255,255,255,0) 48%);
+}
+.shine-btn::after{
+  content:"";position:absolute;top:-20%;bottom:-20%;left:-70%;width:45%;z-index:-1;pointer-events:none;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);
+  transition:left .75s cubic-bezier(.2,.7,.2,1);
+}
+.shine-btn:hover{transform:translateY(-2px)}
+.shine-btn:hover::before{opacity:1}
+.shine-btn:hover::after{left:130%}
+.shine-btn:active{transform:translateY(0) scale(.98)}
+.shine-btn:focus-visible{outline:2px solid var(--green-light);outline-offset:3px}
+
+/* ===== Pantalla de acceso ===== */
+.gate{position:fixed;inset:0;background:var(--black);overflow:hidden;z-index:50}
+.gate[hidden]{display:none}
+.wall{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;gap:18px;opacity:.85;transform:rotate(-4deg) scale(1.15)}
+.gate-shade{position:absolute;inset:0;pointer-events:none;background:
+  linear-gradient(180deg,rgba(10,12,10,.30) 0%,rgba(10,12,10,.22) 50%,rgba(10,12,10,.38) 100%),
+  radial-gradient(ellipse at center,rgba(10,12,10,0) 30%,rgba(10,12,10,.45) 100%)}
+.gate-center{position:relative;z-index:2;height:100%;display:flex;align-items:center;justify-content:center;padding:20px}
+.gate-card{
+  width:min(420px,92vw);text-align:center;padding:32px 28px 28px;border-radius:20px;
+  background:rgba(12,15,12,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border:1px solid var(--line-strong);border-top:4px solid var(--green);
+  box-shadow:0 30px 80px rgba(0,0,0,.6);
+}
+.gate-card img{height:72px;width:auto;background:#fff;border-radius:14px;padding:6px 10px}
+.gate-eyebrow{display:inline-block;margin:14px 0 0;font-size:.78rem;font-weight:800;letter-spacing:2.2px;text-transform:uppercase;color:var(--green-light)}
+.gate-card h1{font-size:1.8rem;margin:4px 0 0;font-weight:900;letter-spacing:.4px}
+.gate-card .sub{color:var(--muted);margin:6px 0 20px}
+.gate-card input{width:100%;padding:14px 16px;border-radius:12px;border:1.5px solid #2A3A2E;background:var(--field);color:var(--text);font-size:1rem;text-align:center;letter-spacing:2px}
+.gate-card input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 4px rgba(31,164,58,.25)}
+.gate-card .go{width:100%;margin-top:14px;padding:14px;border:0;border-radius:12px;font-weight:800;font-size:1.02rem;color:#fff;background:linear-gradient(135deg,var(--green),var(--green-deep));box-shadow:0 10px 26px rgba(31,164,58,.35)}
+.gate-card .err{color:var(--error);font-weight:700;min-height:1.4em;margin-top:10px}
+.shake{animation:shake .4s}
+@keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+
+/* ===== Filas de videos que avanzan ===== */
+.row{overflow:hidden;width:100%;mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.track{display:flex;width:max-content;animation:slide var(--dur,90s) linear infinite}
+.row:hover .track{animation-play-state:paused}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.demo{flex:0 0 auto;width:170px;aspect-ratio:9/16;margin-right:16px;border-radius:16px;overflow:hidden;position:relative;background:var(--black);border:1px solid rgba(95,217,122,.25);box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.demo video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:var(--black)}
+
+/* ===== Aplicación ===== */
+.app[hidden]{display:none}
+.topbar{position:sticky;top:0;z-index:40;background:rgba(10,12,10,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.topbar-in{max-width:1080px;margin:0 auto;padding:10px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:1.02rem;margin-right:auto}
+.brand img{height:36px;width:auto;background:#fff;border-radius:8px;padding:3px 6px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab{background:transparent;border:1px solid transparent;padding:9px 14px;border-radius:999px;font-weight:700;color:var(--muted)}
+.tab:hover{color:var(--green-light);border-color:var(--line);box-shadow:0 8px 20px rgba(31,164,58,.22)}
+.tab.on{background:var(--green);color:#fff;border-color:var(--green-light);box-shadow:0 8px 20px rgba(31,164,58,.35)}
+.logout{background:transparent;color:var(--green-light);border:1.5px solid var(--green);border-radius:999px;padding:8px 16px;font-weight:700}
+.logout:hover{background:rgba(31,164,58,.15);box-shadow:0 10px 24px rgba(31,164,58,.3)}
+
+.hero{position:relative;overflow:hidden;padding:30px 0 26px;background:var(--black)}
+.hero-title{position:relative;z-index:2;text-align:center;padding:22px 16px}
+.hero-title h1{font-size:clamp(2.2rem,6vw,3.8rem);margin:0;font-weight:900;letter-spacing:.5px;line-height:1.1}
+.hero-title p{color:var(--muted);margin:10px auto 0;max-width:620px}
+.hero .row{position:relative;z-index:1}
+.hero .demo{width:150px}
+.hero::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,var(--black) 0%,rgba(10,12,10,.35) 22%,rgba(10,12,10,.35) 78%,var(--black) 100%)}
+
+main{max-width:960px;margin:0 auto;padding:26px 16px 60px}
+.view[hidden]{display:none}
+section.card-block{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px;margin-bottom:20px;position:relative;overflow:hidden}
+section.card-block::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,var(--green-light),var(--green),var(--green-deep))}
+.kicker{display:inline-block;font-size:.76rem;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--green-light);background:rgba(31,164,58,.14);border:1px solid var(--line);padding:4px 10px;border-radius:999px;margin-bottom:8px}
+h2{font-size:1.3rem;margin:0 0 4px;color:var(--text)}
+h3{margin:0 0 6px;font-size:1.05rem;color:var(--text)}
+.hint{color:var(--muted);font-size:.94rem;margin:0 0 14px}
+label{display:block;font-weight:700;margin:14px 0 6px;color:var(--text)}
+input[type=text],input[type=url],input[type=number],textarea,select{width:100%;padding:11px 13px;border:1.5px solid #243428;border-radius:10px;background:var(--field);color:var(--text)}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(31,164,58,.22)}
+input:disabled{opacity:.85;cursor:not-allowed;color:var(--green-light);font-weight:800}
+textarea{min-height:170px;resize:vertical}
+.total{max-width:200px}
+.modes{display:grid;gap:8px;margin-top:6px}
+.mode{display:flex;align-items:center;gap:10px;font-weight:600;margin:0;padding:11px 14px;border:1px solid var(--line);border-radius:10px;background:var(--panel-2);cursor:pointer}
+.mode input{accent-color:var(--green);width:18px;height:18px;flex:0 0 auto}
+.mode:has(input:checked){border-color:var(--green);background:rgba(31,164,58,.12)}
+.mode:hover{border-color:var(--green-light)}
+.fmt-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;margin-top:6px}
+.row-item{display:flex;align-items:center;gap:10px;justify-content:space-between;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel-2)}
+.row-item input{width:90px;text-align:center}
+.row-item small{display:block;color:var(--muted);font-weight:400;font-size:.85rem}
+.row-item b{display:block}
+.count{font-weight:800;margin:12px 0 0;color:var(--muted)}
+.count.ok{color:var(--green-light)}
+.count.bad{color:var(--error)}
+.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.btn-p{background:linear-gradient(135deg,var(--green),var(--green-deep));color:#fff;border:0;border-radius:10px;padding:12px 20px;font-weight:800;box-shadow:0 8px 22px rgba(31,164,58,.3)}
+.btn-p:hover{box-shadow:0 14px 34px rgba(31,164,58,.55)}
+.btn-g{background:transparent;color:var(--green-light);border:1.5px solid var(--green);border-radius:10px;padding:11px 18px;font-weight:700}
+.btn-g:hover{background:rgba(31,164,58,.14);box-shadow:0 10px 26px rgba(31,164,58,.3)}
+.btn-d{background:var(--text);color:var(--black);border:0;border-radius:10px;padding:11px 18px;font-weight:800}
+.btn-d:hover{box-shadow:0 10px 26px rgba(242,247,243,.3)}
+.err{color:var(--error);font-weight:700;margin-top:12px}
+.result{scroll-margin-top:90px}
+.pcard{border:1px solid var(--line);border-left:5px solid var(--green);border-radius:12px;padding:14px;margin-top:14px;background:var(--panel-2)}
+.tags{margin-bottom:6px}
+.tag{display:inline-block;background:var(--text);color:var(--black);font-size:.78rem;font-weight:800;padding:3px 10px;border-radius:999px;margin:2px 6px 2px 0}
+.tag.g{background:var(--green);color:#fff}
+pre{white-space:pre-wrap;word-wrap:break-word;background:var(--field);border:1px solid var(--line);border-radius:10px;padding:12px;font:inherit;font-size:.92rem;margin:8px 0;color:#D9F5DF}
+
+/* Cómo empezar */
+.steps{list-style:none;padding:0;margin:14px 0 0;display:grid;gap:10px}
+.step{display:flex;gap:14px;align-items:flex-start;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2);transition:background .2s,border-color .2s}
+.step.done{background:rgba(31,164,58,.12);border-color:var(--green)}
+.step input{margin-top:6px;width:20px;height:20px;accent-color:var(--green);flex:0 0 auto}
+.step .n{flex:0 0 auto;width:34px;height:34px;border-radius:50%;background:var(--text);color:var(--black);font-weight:900;display:flex;align-items:center;justify-content:center}
+.step.done .n{background:var(--green);color:#fff}
+.step p{margin:2px 0 0;color:var(--muted);font-size:.94rem}
+.progress{height:12px;background:#17201A;border-radius:999px;overflow:hidden;margin-top:14px;border:1px solid var(--line)}
+.progress div{height:100%;width:0;background:linear-gradient(90deg,var(--green-deep),var(--green),var(--green-light));transition:width .4s}
+.progress-text{font-weight:800;color:var(--green-light);margin-top:6px}
+.tip{background:rgba(31,164,58,.12);border:1px solid var(--line-strong);border-radius:12px;padding:14px 16px;margin-top:14px}
+.tip b{color:var(--green-light)}
+.dos{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:14px}
+.do{border-radius:12px;padding:14px;border:1px solid var(--line);background:var(--panel-2)}
+.do.yes{border-top:4px solid var(--green)}
+.do.no{border-top:4px solid var(--error)}
+.do ul{margin:8px 0 0;padding-left:18px;color:var(--muted);font-size:.94rem}
+
+/* Botón de sonido sobre cada video de formatos */
+.sound-btn{position:absolute;right:10px;bottom:10px;z-index:3;width:44px;height:44px;padding:0;border-radius:50%;border:1.5px solid var(--green-light);background:rgba(10,12,10,.72);color:var(--green-light);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.45)}
+.sound-btn svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;position:relative;z-index:1}
+.sound-btn[aria-pressed="true"]{background:var(--green);color:#fff;border-color:#fff}
+
+/* Formatos: cada uno con su video y su explicación */
+.engine{background:rgba(31,164,58,.12);border:1px solid var(--line-strong);border-radius:12px;padding:14px 16px;margin:0 0 6px;color:var(--muted)}
+.engine b{color:var(--green-light)}
+.fx{display:grid;grid-template-columns:200px 1fr;gap:20px;align-items:start;border:1px solid var(--line);border-radius:14px;padding:18px;background:var(--panel-2);margin-top:16px}
+.fx .demo{width:200px;margin:0}
+.fx h3{font-size:1.2rem;color:var(--green-light)}
+.fx dl{margin:10px 0 0;display:grid;gap:10px}
+.fx dt{font-weight:800;color:var(--text)}
+.fx dd{margin:2px 0 0;color:var(--muted)}
+.fx .num{display:inline-block;width:28px;height:28px;border-radius:50%;background:var(--green);color:#fff;text-align:center;line-height:28px;font-weight:900;margin-right:8px}
+.fx .go{margin-top:12px}
+.soon{border:1.5px dashed var(--line-strong);border-radius:14px;padding:18px;margin-top:14px;text-align:center;color:var(--muted)}
+
+/* Preguntas */
+details{border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-top:10px;background:var(--panel-2)}
+details[open]{border-color:var(--green)}
+summary{cursor:pointer;font-weight:800;color:var(--green-light)}
+details p{margin:8px 0 0;color:var(--muted)}
+
+.foot{color:var(--muted);font-size:.85rem;text-align:center;margin-top:24px}
+
+@media(max-width:640px){
+  .brand span{display:none}
+  .gate-card{padding:26px 20px}
+  .demo{width:140px}
+  .hero .demo{width:120px}
+  .wall{transform:rotate(-4deg) scale(1.3)}
+  .fx{grid-template-columns:1fr}
+  .fx .demo{width:100%;max-width:240px}
+}
+@media (prefers-reduced-motion: reduce){
+  .track,.shine{animation:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== Pantalla de acceso ===== -->
+<div id="gate" class="gate">
+  <div class="wall" id="gate-wall"></div>
+  <div class="gate-shade"></div>
+  <div class="gate-center">
+    <div class="gate-card" id="gate-card">
+      <img src="logo.png" alt="Wi-Fi Money Group">
+      <span class="gate-eyebrow">Viral Commerce</span>
+      <h1 class="shine">Wi-Fi Money Group</h1>
+      <p class="sub">Escribe la contraseña de la comunidad para entrar.</p>
+      <input id="pass" type="password" placeholder="Contraseña" autocomplete="current-password">
+      <button class="go shine-btn" id="enter" type="button">Entrar</button>
+      <div class="err" id="gate-err"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Aplicación (después de iniciar sesión) ===== -->
+<div id="app" class="app" hidden>
+
+  <header class="topbar">
+    <div class="topbar-in">
+      <div class="brand"><img src="logo.png" alt=""><span>Wi-Fi Money Group</span></div>
+      <nav class="tabs" aria-label="Secciones">
+        <button class="tab on shine-btn" data-tab="gen" type="button">Generador</button>
+        <button class="tab shine-btn" data-tab="start" type="button">Cómo empezar</button>
+        <button class="tab shine-btn" data-tab="formats" type="button">Formatos</button>
+        <button class="tab shine-btn" data-tab="faq" type="button">Preguntas</button>
+      </nav>
+      <button class="logout shine-btn" id="logout" type="button">Salir</button>
+    </div>
+    <div class="brand-line"></div>
+  </header>
+
+  <div class="hero">
+    <div class="row-wrap" id="hero-top"></div>
+    <div class="hero-title">
+      <h1 class="shine">Viral Commerce</h1>
+      <p>Mira cómo se ven los formatos antes de crear los tuyos. Luego genera tus prompts desde esta misma página.</p>
+    </div>
+    <div class="row-wrap" id="hero-bottom"></div>
+  </div>
+
+  <main>
+
+    <!-- Generador -->
+    <div class="view" data-view="gen">
+      <section class="card-block">
+        <span class="kicker">Paso 1</span>
+        <h2>Datos del producto</h2>
+        <p class="hint">Mientras más detallada sea la descripción, mejor será el video. Incluye qué es, para quién es, sus beneficios, cómo funciona, su precio si quieres mostrarlo, lo que lo diferencia y las dudas más comunes.</p>
+        <label for="prod-name">Nombre del producto</label>
+        <input id="prod-name" type="text" placeholder="Ej: Router Mesh Pro">
+        <label for="prod-link">Enlace del producto</label>
+        <input id="prod-link" type="url" placeholder="https://...">
+        <label for="prod-desc">Descripción detallada</label>
+        <textarea id="prod-desc" placeholder="Describe el producto con todo el detalle que puedas."></textarea>
+      </section>
+
+      <section class="card-block">
+        <span class="kicker">Paso 2</span>
+        <h2>Total de creativos</h2>
+        <p class="hint">Define cuántos videos quieres en total. Después elige cómo se reparten entre los formatos.</p>
+        <label for="total">Total de creativos</label>
+        <input id="total" class="total" type="number" min="1" max="100" value="5">
+
+        <label>Por formato</label>
+        <div class="modes" role="radiogroup" aria-label="Cómo repartir por formato">
+          <label class="mode shine-btn"><input type="radio" name="fmode" value="equal" checked> En partes iguales, dispersos en todos los formatos</label>
+          <label class="mode shine-btn"><input type="radio" name="fmode" value="single"> Todos en un solo formato</label>
+          <label class="mode shine-btn"><input type="radio" name="fmode" value="manual"> Elegir cuántos van en cada formato</label>
+        </div>
+        <div id="single-wrap" hidden>
+          <label for="format-single">Formato para todos los creativos</label>
+          <select id="format-single"></select>
+        </div>
+
+        <div id="fmt-list" class="fmt-list"></div>
+        <div id="fmt-count" class="count"></div>
+
+        <div class="btns"><button class="btn-p shine-btn" id="gen" type="button">Generar prompts</button></div>
+        <div id="err" class="err"></div>
+      </section>
+
+      <section class="card-block result" id="results" hidden>
+        <span class="kicker">Paso 3</span>
+        <h2>Tus prompts</h2>
+        <p class="hint">Copia cada prompt y pégalo en Claude, dentro de la carpeta del kit en tu computadora. Esta página solo prepara los prompts. El video se crea ahí.</p>
+        <div class="btns"><button class="btn-d shine-btn" id="copy-all" type="button">Copiar todos</button></div>
+        <div id="cards"></div>
+      </section>
+    </div>
+
+    <!-- Cómo empezar -->
+    <div class="view" data-view="start" hidden>
+      <section class="card-block">
+        <span class="kicker">Guía paso a paso</span>
+        <h2>Cómo crear tu primer video</h2>
+        <p class="hint">Marca cada paso cuando lo completes. Tu avance se guarda en este navegador.</p>
+        <ul class="steps" id="steps"></ul>
+        <div class="progress"><div id="progress-bar"></div></div>
+        <div class="progress-text" id="progress-text"></div>
+      </section>
+
+      <section class="card-block">
+        <span class="kicker">Buenas prácticas</span>
+        <h2>Cómo escribir una buena descripción</h2>
+        <p class="hint">La descripción es lo que más define el video. Estos ejemplos te ayudan a escribirla.</p>
+        <div class="dos">
+          <div class="do yes">
+            <h3>Sí conviene</h3>
+            <ul>
+              <li>Qué es el producto y para quién sirve.</li>
+              <li>Beneficios concretos que sí están en la ficha del producto.</li>
+              <li>Cómo se usa, paso a paso.</li>
+              <li>Dudas frecuentes y sus respuestas.</li>
+            </ul>
+          </div>
+          <div class="do no">
+            <h3>Evita</h3>
+            <ul>
+              <li>Promesas de ganancias o resultados sin respaldo.</li>
+              <li>Cifras o testimonios que no tengas verificados.</li>
+              <li>Descripciones de una sola frase.</li>
+              <li>Mezclar varios productos en una misma descripción.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="tip"><b>Consejo:</b> si no tienes el enlace, escribe todo lo que sepas en la descripción. Los prompts usan solo lo que escribas.</div>
+      </section>
+    </div>
+
+    <!-- Formatos -->
+    <div class="view" data-view="formats" hidden>
+      <section class="card-block">
+        <span class="kicker">Formatos</span>
+        <h2>Los 8 formatos, uno por uno</h2>
+        <p class="hint">Cada formato cambia el ángulo del video. Mira el ejemplo, lee cuándo conviene usarlo y cómo escribir la descripción para que salga bien.</p>
+        <div class="engine"><b>Motor:</b> todos se crean con Full Visual, el motor del kit. Cada video sale con voz, subtítulos animados y escenas con imágenes reales. Los 5 ganchos se aprueban en un solo paso.</div>
+        <div id="format-list"></div>
+      </section>
+    </div>
+
+    <!-- Preguntas -->
+    <div class="view" data-view="faq" hidden>
+      <section class="card-block">
+        <span class="kicker">Preguntas frecuentes</span>
+        <h2>Resolvemos tus dudas</h2>
+        <div id="faq"></div>
+      </section>
+    </div>
+
+    <p class="foot">Wi-Fi Money Group · Viral Commerce</p>
+  </main>
+</div>
+
+<script>
+/* ===== Acceso ===== */
+/* Contraseña universal guardada como SHA-256 (no se ve en el código).
+   Contraseña actual: WMG2026. Para cambiarla, calcula el SHA-256 de la nueva y reemplaza el valor.
+   Nota: es un filtro para el acceso casual. Un bloqueo real requiere un servidor con inicio de sesión. */
+const ACCESS_HASH = "773a6061dd8371e4a63b2ffe215955f2eee29049716c3ffc195cbc94faf75eff";
+
+/* ===== Motor del kit ===== */
+const ENGINE_COMMAND = "/full-visual";
+
+/* ===== Los 8 formatos. "video" es la posición en VIDEO_FILES del ejemplo de cada formato. ===== */
+const FORMATS = [
+  {
+    id: "sabias", name: "¿Sabías qué? (datos curiosos)", short: "Un dato real que sorprende",
+    angle: "Abre con un dato curioso real relacionado con el producto o su categoría. Explícalo en pocas frases y conéctalo con el producto.",
+    video: 8,
+    what: "Empieza con un dato real que sorprende y lo conecta con el producto.",
+    when: "Para captar la atención de personas que todavía no conocen el producto.",
+    hook: "¿Sabías qué le pasa a tu cuerpo cuando...?",
+    describe: "Incluye el dato real y la fuente que lo respalda. Si no tienes un dato verificado, no uses este formato."
+  },
+  {
+    id: "mitos", name: "Mitos vs. realidad", short: "Desmiente una creencia común",
+    angle: "Presenta un mito común sobre el tema, muestra por qué no es cierto y explica la realidad.",
+    video: 6,
+    what: "Presenta una creencia que la gente tiene y muestra por qué no es cierta.",
+    when: "Cuando tus clientes tienen una idea equivocada que les impide comprar o usar bien el producto.",
+    hook: "Todos creen que... Pero la realidad es otra.",
+    describe: "Escribe el mito que escuchan tus clientes y la realidad que explica el producto."
+  },
+  {
+    id: "problema", name: "Problema y solución", short: "Muestra un dolor y cómo se resuelve",
+    angle: "Muestra un problema que vive la persona y cómo el producto lo resuelve.",
+    video: 3,
+    what: "Muestra un dolor concreto de la persona y cómo el producto lo resuelve.",
+    when: "Cuando el público ya sabe que tiene un problema, pero no conoce la solución.",
+    hook: "¿Te pasa que... cada vez que intentas...?",
+    describe: "Describe el problema exacto del cliente con sus palabras y cómo el producto lo resuelve."
+  },
+  {
+    id: "como", name: "Cómo funciona", short: "Explica el producto paso a paso",
+    angle: "Explica cómo funciona el producto en pasos simples y en orden.",
+    video: 7,
+    what: "Explica el producto en pasos simples, en orden.",
+    when: "Cuando el producto tiene un proceso que la gente necesita entender antes de comprar.",
+    hook: "Así funciona, en tres pasos.",
+    describe: "Escribe los pasos reales de uso, en el orden en que ocurren."
+  },
+  {
+    id: "errores", name: "Errores comunes", short: "Lo que la gente hace mal",
+    angle: "Muestra un error que cometen muchas personas en este tema y cómo evitarlo con el producto.",
+    video: 4,
+    what: "Muestra un error que muchas personas cometen y cómo evitarlo con el producto.",
+    when: "Cuando ves que tus clientes repiten el mismo error y el producto lo corrige.",
+    hook: "El error que casi todos cometen al...",
+    describe: "Escribe los errores que ves en tus clientes y la forma en que el producto los evita."
+  },
+  {
+    id: "beneficios", name: "Beneficios clave", short: "Las ventajas más importantes",
+    angle: "Destaca los 3 beneficios más importantes del producto, cada uno con una escena concreta.",
+    video: 10,
+    what: "Destaca los tres beneficios más importantes, cada uno con una escena concreta.",
+    when: "Cuando la persona ya entiende el producto y necesita motivos para decidirse.",
+    hook: "Tres razones para elegirlo hoy.",
+    describe: "Lista los beneficios que aparecen en la ficha del producto, del más importante al menos importante."
+  },
+  {
+    id: "faq", name: "Preguntas frecuentes", short: "Responde lo que todos preguntan",
+    angle: "Responde la pregunta más frecuente que tendría alguien antes de comprar.",
+    video: 13,
+    what: "Responde una duda real que tendría alguien antes de comprar.",
+    when: "Cuando las mismas preguntas aparecen una y otra vez y frenan la compra.",
+    hook: "¿Sirve para... ? La respuesta corta es...",
+    describe: "Escribe las tres preguntas que más te hacen antes de comprar y sus respuestas."
+  },
+  {
+    id: "comparacion", name: "Antes y después", short: "Compara sin el producto y con él",
+    angle: "Compara cómo se hace sin el producto y cómo se hace con el producto, usando solo datos de la descripción.",
+    video: 12,
+    what: "Compara la situación antes y después de usar el producto.",
+    when: "Cuando el cambio es fácil de ver y puedes mostrarlo con datos reales.",
+    hook: "Antes... ahora...",
+    describe: "Describe cómo era la situación antes y cómo cambió con el producto, solo con datos verificables."
+  }
+];
+
+/* Archivos de video de la galería y de los formatos. Se cargan solo cuando la tarjeta entra en pantalla. */
+const VIDEO_FILES = [
+  "videos/v01.mp4", "videos/v02.mp4", "videos/v03.mp4", "videos/v04.mp4", "videos/v05.mp4",
+  "videos/v06.mp4", "videos/v07.mp4", "videos/v08.mp4", "videos/v09.mp4", "videos/v10.mp4",
+  "videos/v11.mp4", "videos/v12.mp4", "videos/v13.mp4", "videos/v14.mp4"
+];
+
+/* Galería de la pantalla de acceso y del encabezado: una entrada por video. */
+const DEMOS = VIDEO_FILES.map((src, i) => ({ src, t: "Video " + (i + 1) }));
+
+const $ = (id) => document.getElementById(id);
+
+/* ===== Acceso ===== */
+async function sha256(text) {
+  const data = new TextEncoder().encode(text);
+  const digest = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(digest)).map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+function unlock() {
+  $("gate").hidden = true;
+  $("app").hidden = false;
+  try { sessionStorage.setItem("wmg-auth", "1"); } catch (e) {}
+  window.scrollTo(0, 0);
+}
+
+function lock() {
+  try { sessionStorage.removeItem("wmg-auth"); } catch (e) {}
+  $("app").hidden = true;
+  $("gate").hidden = false;
+  $("pass").value = "";
+  $("gate-err").textContent = "";
+  $("pass").focus();
+}
+
+async function tryEnter() {
+  const value = $("pass").value;
+  if (!value) {
+    $("gate-err").textContent = "Escribe la contraseña.";
+    shakeCard();
+    return;
+  }
+  const h = await sha256(value);
+  if (h === ACCESS_HASH) {
+    $("gate-err").textContent = "";
+    unlock();
+  } else {
+    $("gate-err").textContent = "Contraseña incorrecta.";
+    shakeCard();
+    $("pass").select();
+  }
+}
+
+function shakeCard() {
+  const c = $("gate-card");
+  c.classList.remove("shake");
+  void c.offsetWidth;
+  c.classList.add("shake");
+}
+
+/* ===== Videos ===== */
+let videoObserver = null;
+function getVideoObserver() {
+  if (!videoObserver && "IntersectionObserver" in window) {
+    videoObserver = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        const v = en.target;
+        if (en.isIntersecting) {
+          if (!v.src) v.src = v.dataset.src;
+          v.play().catch(() => {});
+        } else {
+          v.pause();
+        }
+      });
+    }, { threshold: 0.1 });
+  }
+  return videoObserver;
+}
+
+/* eager: el video arranca de inmediato (fondos). Si no, solo se reproduce cuando está en pantalla. */
+function videoElement(src, label, eager) {
+  const v = document.createElement("video");
+  v.muted = true;
+  v.setAttribute("muted", "");
+  v.loop = true;
+  v.playsInline = true;
+  v.setAttribute("playsinline", "");
+  v.setAttribute("aria-label", label);
+  if (eager) {
+    v.autoplay = true;
+    v.setAttribute("autoplay", "");
+    v.preload = "auto";
+    v.src = src;
+    v.play().catch(() => {});
+    return v;
+  }
+  v.preload = "none";
+  v.dataset.src = src;
+  const obs = getVideoObserver();
+  if (obs) {
+    obs.observe(v);
+  } else {
+    v.src = src;
+    v.play().catch(() => {});
+  }
+  return v;
+}
+
+function demoCard(d) {
+  const el = document.createElement("div");
+  el.className = "demo";
+  el.appendChild(videoElement(d.src, d.t, true));
+  return el;
+}
+
+/* Fila de videos que avanza. Cada fila empieza en un punto distinto de la lista. */
+function buildRow(container, offset, cards, dur) {
+  const row = document.createElement("div");
+  row.className = "row";
+  const track = document.createElement("div");
+  track.className = "track";
+  track.style.setProperty("--dur", dur + "s");
+  const list = [];
+  for (let i = 0; i < cards; i++) list.push(DEMOS[(i + offset) % DEMOS.length]);
+  // Se duplica la lista para que el desplazamiento sea continuo.
+  [...list, ...list].forEach((d) => track.appendChild(demoCard(d)));
+  row.appendChild(track);
+  container.appendChild(row);
+}
+
+function buildWall(container, rows, cards) {
+  container.innerHTML = "";
+  for (let r = 0; r < rows; r++) {
+    buildRow(container, r * 3, cards, 70 + r * 18);
+  }
+}
+
+/* ===== Reparto por formato ===== */
+function split(total, k) {
+  const base = Math.floor(total / k);
+  const rem = total % k;
+  return Array.from({ length: k }, (_, i) => base + (i < rem ? 1 : 0));
+}
+
+function renderFormatRows() {
+  const box = $("fmt-list");
+  box.innerHTML = "";
+  FORMATS.forEach((f) => {
+    const row = document.createElement("div");
+    row.className = "row-item";
+    const info = document.createElement("div");
+    const b = document.createElement("b");
+    b.textContent = f.name;
+    const s = document.createElement("small");
+    s.textContent = f.short;
+    info.append(b, s);
+    const input = document.createElement("input");
+    input.type = "number";
+    input.min = "0";
+    input.max = "100";
+    input.value = "0";
+    input.dataset.id = f.id;
+    input.setAttribute("aria-label", "Cantidad de " + f.name);
+    input.addEventListener("input", () => refreshCounts(false));
+    row.append(info, input);
+    box.appendChild(row);
+  });
+}
+
+function totalValue() {
+  return parseInt($("total").value, 10) || 0;
+}
+
+function sum(o) {
+  return Object.values(o).reduce((a, b) => a + b, 0);
+}
+
+function readCounts() {
+  const out = {};
+  $("fmt-list").querySelectorAll("input").forEach((i) => {
+    out[i.dataset.id] = parseInt(i.value, 10) || 0;
+  });
+  return out;
+}
+
+function fmode() {
+  return document.querySelector('input[name="fmode"]:checked').value;
+}
+
+/* Cantidad por formato según el modo elegido. */
+function formatCounts(total) {
+  const mode = fmode();
+  const out = {};
+  if (mode === "single") {
+    FORMATS.forEach((f) => (out[f.id] = 0));
+    out[$("format-single").value] = total;
+    return out;
+  }
+  if (mode === "manual") return readCounts();
+  const parts = split(total, FORMATS.length);
+  FORMATS.forEach((f, i) => (out[f.id] = parts[i]));
+  return out;
+}
+
+/* Actualiza los números visibles y el mensaje de estado. */
+function refreshCounts(resetManual) {
+  const total = totalValue();
+  const mode = fmode();
+  $("single-wrap").hidden = mode !== "single";
+  if (mode !== "manual" || resetManual) {
+    const counts = formatCounts(total);
+    $("fmt-list").querySelectorAll("input").forEach((i) => {
+      i.value = counts[i.dataset.id];
+    });
+  }
+  $("fmt-list").querySelectorAll("input").forEach((i) => {
+    i.disabled = mode !== "manual";
+  });
+
+  const status = $("fmt-count");
+  if (mode === "manual") {
+    const t = sum(readCounts());
+    status.textContent = "Asignados: " + t + " de " + total;
+    status.className = "count " + (t === total ? "ok" : "bad");
+  } else if (mode === "single") {
+    const name = FORMATS.find((f) => f.id === $("format-single").value).name;
+    status.textContent = "Los " + total + " creativos serán del formato: " + name;
+    status.className = "count ok";
+  } else {
+    status.textContent = "Los " + total + " creativos se reparten en partes iguales entre " + FORMATS.length + " formatos.";
+    status.className = "count ok";
+  }
+}
+
+/* ===== Prompts ===== */
+function buildPrompt(p, format, index, total) {
+  const link = p.link ? p.link : "no se entregó enlace; usa solo la descripción";
+  return [
+    ENGINE_COMMAND + " Crea un video explicativo sobre el producto \"" + p.name + "\" para la comunidad Wi-Fi Money Group.",
+    "",
+    "Creativo " + (index + 1) + " de " + total + ".",
+    "Formato: " + format.name,
+    "Enfoque del video: " + format.angle,
+    "",
+    "Producto: " + p.name,
+    "Enlace: " + link,
+    "Descripción detallada:",
+    p.desc,
+    "",
+    "Reglas:",
+    "- Usa solo datos que aparezcan en la descripción o que puedas verificar en su fuente. No inventes cifras, resultados, precios ni testimonios.",
+    "- Subtítulos en español.",
+    "- Propón los ganchos y el guion, y espera mi aprobación antes de construir el video.",
+    "- Entrega 5 versiones de 1080x1920 a 60 fps, con el texto de publicación y la portada.",
+    "- Cambia el gancho respecto a los otros creativos de este mismo producto."
+  ].join("\n");
+}
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function expand(counts) {
+  const out = [];
+  FORMATS.forEach((f) => {
+    for (let i = 0; i < (counts[f.id] || 0); i++) out.push(f);
+  });
+  return out;
+}
+
+function validate() {
+  const name = $("prod-name").value.trim();
+  const desc = $("prod-desc").value.trim();
+  if (!name) return "Escribe el nombre del producto.";
+  if (!desc) return "Escribe la descripción del producto.";
+  const total = totalValue();
+  if (total < 1) return "El total de creativos debe ser al menos 1.";
+  if (fmode() === "manual" && sum(readCounts()) !== total) {
+    return "La suma por formato debe ser igual al total.";
+  }
+  return null;
+}
+
+function copyText(text, btn) {
+  const done = () => {
+    const old = btn.textContent;
+    btn.textContent = "¡Copiado!";
+    setTimeout(() => (btn.textContent = old), 1500);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done, () => fallbackCopy(text, done));
+  } else {
+    fallbackCopy(text, done);
+  }
+}
+
+function fallbackCopy(text, done) {
+  const ta = document.createElement("textarea");
+  ta.value = text;
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand("copy"); done(); } catch (e) {}
+  document.body.removeChild(ta);
+}
+
+let lastPrompts = [];
+
+function generate() {
+  $("err").textContent = "";
+  const problem = validate();
+  if (problem) {
+    $("err").textContent = problem;
+    return;
+  }
+  const p = {
+    name: $("prod-name").value.trim(),
+    link: $("prod-link").value.trim(),
+    desc: $("prod-desc").value.trim()
+  };
+  const total = totalValue();
+  const list = shuffle(expand(formatCounts(total)));
+
+  lastPrompts = [];
+  const cards = $("cards");
+  cards.innerHTML = "";
+  list.forEach((format, i) => {
+    const text = buildPrompt(p, format, i, total);
+    lastPrompts.push(text);
+
+    const card = document.createElement("div");
+    card.className = "pcard";
+    const tags = document.createElement("div");
+    tags.className = "tags";
+    [["Creativo " + (i + 1), ""], [format.name, "g"]].forEach(([label, cls]) => {
+      const s = document.createElement("span");
+      s.className = "tag " + cls;
+      s.textContent = label;
+      tags.appendChild(s);
+    });
+    const pre = document.createElement("pre");
+    pre.textContent = text;
+    const btn = document.createElement("button");
+    btn.className = "btn-g shine-btn";
+    btn.type = "button";
+    btn.textContent = "Copiar prompt";
+    btn.addEventListener("click", () => copyText(text, btn));
+    card.append(tags, pre, btn);
+    cards.appendChild(card);
+  });
+  $("results").hidden = false;
+  $("results").scrollIntoView({ behavior: "smooth", block: "start" });
+  saveForm();
+}
+
+/* ===== Sonido de los videos de formatos: solo uno suena a la vez ===== */
+const ICON_MUTED = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>';
+const ICON_ON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>';
+const soundItems = [];
+
+function attachSound(wrapper, v) {
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "sound-btn shine-btn";
+  btn.setAttribute("aria-label", "Activar o silenciar el sonido");
+  btn.setAttribute("aria-pressed", "false");
+  btn.innerHTML = ICON_MUTED;
+  btn.addEventListener("click", () => {
+    const turnOn = v.muted;
+    soundItems.forEach((o) => {
+      if (o.v !== v) {
+        o.v.muted = true;
+        o.btn.innerHTML = ICON_MUTED;
+        o.btn.setAttribute("aria-pressed", "false");
+      }
+    });
+    v.muted = !turnOn;
+    btn.innerHTML = v.muted ? ICON_MUTED : ICON_ON;
+    btn.setAttribute("aria-pressed", String(!v.muted));
+    if (!v.muted) v.play().catch(() => {});
+  });
+  soundItems.push({ v, btn });
+  wrapper.appendChild(btn);
+}
+
+/* ===== Formatos (explicación con video) ===== */
+function renderFormats() {
+  const list = $("format-list");
+  list.innerHTML = "";
+  FORMATS.forEach((f, i) => {
+    const card = document.createElement("article");
+    card.className = "fx";
+
+    const box = document.createElement("div");
+    const wrap = document.createElement("div");
+    wrap.className = "demo";
+    const fv = videoElement(VIDEO_FILES[f.video], f.name, false);
+    wrap.appendChild(fv);
+    attachSound(wrap, fv);
+    box.appendChild(wrap);
+
+    const body = document.createElement("div");
+    const h = document.createElement("h3");
+    const num = document.createElement("span");
+    num.className = "num";
+    num.textContent = String(i + 1);
+    h.append(num, document.createTextNode(f.name));
+
+    const dl = document.createElement("dl");
+    [
+      ["Qué es", f.what],
+      ["Cuándo conviene", f.when],
+      ["Ejemplo de gancho", f.hook],
+      ["Cómo escribir la descripción", f.describe]
+    ].forEach(([term, def]) => {
+      const dt = document.createElement("dt");
+      dt.textContent = term;
+      const dd = document.createElement("dd");
+      dd.textContent = def;
+      dl.append(dt, dd);
+    });
+
+    const go = document.createElement("button");
+    go.className = "btn-p shine-btn go";
+    go.type = "button";
+    go.textContent = "Usar este formato";
+    go.addEventListener("click", () => {
+      selectFormat(f.id);
+      showTab("gen");
+    });
+
+    body.append(h, dl, go);
+    card.append(box, body);
+    list.appendChild(card);
+  });
+}
+
+/* Preselecciona un formato en el generador. */
+function selectFormat(id) {
+  document.querySelector('input[name="fmode"][value="single"]').checked = true;
+  $("format-single").value = id;
+  refreshCounts(true);
+}
+
+const STEPS = [
+  { t: "Escribe los datos del producto", d: "Nombre, enlace si lo tienes, y una descripción con todo el detalle posible." },
+  { t: "Elige cuántos creativos quieres", d: "Define el total y repártelo entre los formatos." },
+  { t: "Genera y revisa los prompts", d: "Lee cada prompt y confirma que los datos del producto estén bien." },
+  { t: "Pega el prompt en Claude", d: "Hazlo dentro de la carpeta del kit en tu computadora." },
+  { t: "Aprueba el gancho y el guion", d: "Elige el gancho que más te guste y ajusta las palabras si hace falta." },
+  { t: "Revisa las 5 versiones y publica", d: "Revisa cada versión antes de publicar y usa el texto y la portada que te entrega." }
+];
+
+function renderSteps() {
+  const ul = $("steps");
+  ul.innerHTML = "";
+  let saved = [];
+  try { saved = JSON.parse(localStorage.getItem("wmg-steps") || "[]"); } catch (e) {}
+  STEPS.forEach((s, i) => {
+    const li = document.createElement("li");
+    li.className = "step" + (saved[i] ? " done" : "");
+    const cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.checked = !!saved[i];
+    cb.addEventListener("change", () => {
+      li.classList.toggle("done", cb.checked);
+      const state = Array.from(ul.querySelectorAll("input")).map((x) => x.checked);
+      try { localStorage.setItem("wmg-steps", JSON.stringify(state)); } catch (e) {}
+      updateProgress();
+    });
+    const n = document.createElement("span");
+    n.className = "n";
+    n.textContent = String(i + 1);
+    const body = document.createElement("div");
+    const h = document.createElement("b");
+    h.textContent = s.t;
+    const p = document.createElement("p");
+    p.textContent = s.d;
+    body.append(h, p);
+    li.append(cb, n, body);
+    ul.appendChild(li);
+  });
+  updateProgress();
+}
+
+function updateProgress() {
+  const boxes = $("steps").querySelectorAll("input");
+  const done = Array.from(boxes).filter((b) => b.checked).length;
+  const pct = Math.round((done / STEPS.length) * 100);
+  $("progress-bar").style.width = pct + "%";
+  $("progress-text").textContent = done === STEPS.length
+    ? "¡Listo! Completaste todos los pasos."
+    : done + " de " + STEPS.length + " pasos completados (" + pct + "%)";
+}
+
+const FAQS = [
+  { q: "¿Por qué esta página no crea el video?", a: "La página solo prepara el prompt. El video se construye dentro de la carpeta del kit, en tu computadora, con Claude." },
+  { q: "¿Qué pasa si no tengo el enlace del producto?", a: "No pasa nada. El enlace es opcional. Los prompts usan solo lo que escribas en la descripción." },
+  { q: "¿Por qué las sumas tienen que coincidir con el total?", a: "Cada creativo necesita un formato. Si la suma manual no coincide con el total, algunos creativos quedarían sin asignar." },
+  { q: "¿Qué significa cada forma de repartir?", a: "En partes iguales reparte los videos entre los 8 formatos. Todos en un solo formato pone todos los videos en ese formato. Elegir cuántos te deja decidir la cantidad de cada uno." },
+  { q: "¿En qué idioma salen los subtítulos?", a: "Los prompts piden subtítulos en español. El kit indica que hoy genera subtítulos en inglés, así que revisa el primer video antes de producir varios." },
+  { q: "¿Por qué el video pide aprobar el guion?", a: "Es la única pausa del proceso. Así eliges el gancho y ajustas las palabras antes de que se construya todo el video." },
+  { q: "¿Se guardan mis datos?", a: "Los datos del formulario se guardan solo en este navegador, para que no tengas que escribirlos de nuevo." },
+  { q: "¿Cómo cambio la contraseña de acceso?", a: "Pídela a la administración de la comunidad. Es una contraseña compartida para todos los miembros." }
+];
+
+function renderFaq() {
+  const box = $("faq");
+  box.innerHTML = "";
+  FAQS.forEach((f, i) => {
+    const d = document.createElement("details");
+    if (i === 0) d.open = true;
+    const s = document.createElement("summary");
+    s.textContent = f.q;
+    const p = document.createElement("p");
+    p.textContent = f.a;
+    d.append(s, p);
+    box.appendChild(d);
+  });
+}
+
+/* ===== Pestañas ===== */
+function showTab(name) {
+  document.querySelectorAll(".view").forEach((v) => {
+    v.hidden = v.dataset.view !== name;
+  });
+  document.querySelectorAll(".tab").forEach((t) => {
+    t.classList.toggle("on", t.dataset.tab === name);
+  });
+  window.scrollTo({ top: document.querySelector(".hero").offsetHeight - 10, behavior: "smooth" });
+}
+
+/* ===== Guardado del formulario ===== */
+function saveForm() {
+  try {
+    localStorage.setItem("wmg-prompts", JSON.stringify({
+      name: $("prod-name").value,
+      link: $("prod-link").value,
+      desc: $("prod-desc").value
+    }));
+  } catch (e) {}
+}
+
+function loadForm() {
+  try {
+    const raw = localStorage.getItem("wmg-prompts");
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    $("prod-name").value = d.name || "";
+    $("prod-link").value = d.link || "";
+    $("prod-desc").value = d.desc || "";
+  } catch (e) {}
+}
+
+/* ===== Efecto premium: el reflejo sigue al cursor ===== */
+function initShineButtons() {
+  document.addEventListener("pointermove", (e) => {
+    const el = e.target.closest && e.target.closest(".shine-btn");
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    el.style.setProperty("--mx", (e.clientX - r.left) + "px");
+    el.style.setProperty("--my", (e.clientY - r.top) + "px");
+  });
+}
+
+/* ===== Arranque ===== */
+function initApp() {
+  renderFormatRows();
+  FORMATS.forEach((f) => {
+    const o = document.createElement("option");
+    o.value = f.id;
+    o.textContent = f.name;
+    $("format-single").appendChild(o);
+  });
+  refreshCounts(true);
+  renderFormats();
+  renderSteps();
+  renderFaq();
+  loadForm();
+  initShineButtons();
+
+  document.querySelectorAll(".tab").forEach((t) => {
+    t.addEventListener("click", () => showTab(t.dataset.tab));
+  });
+  $("total").addEventListener("input", () => refreshCounts(true));
+  document.querySelectorAll('input[name="fmode"]').forEach((r) => r.addEventListener("change", () => refreshCounts(true)));
+  $("format-single").addEventListener("change", () => refreshCounts(true));
+  $("gen").addEventListener("click", generate);
+  $("copy-all").addEventListener("click", (e) => copyText(lastPrompts.join("\n\n----------\n\n"), e.currentTarget));
+  $("logout").addEventListener("click", lock);
+}
+
+function initGate() {
+  buildWall($("gate-wall"), 4, 5);
+  buildRow($("hero-top"), 0, 6, 80);
+  buildRow($("hero-bottom"), 6, 6, 95);
+  $("enter").addEventListener("click", tryEnter);
+  $("pass").addEventListener("keydown", (e) => { if (e.key === "Enter") tryEnter(); });
+  initShineButtons();
+}
+
+initGate();
+initApp();
+let authed = false;
+try { authed = sessionStorage.getItem("wmg-auth") === "1"; } catch (e) {}
+if (authed) unlock(); else $("pass").focus();
+</script>
+</body>
+</html>
