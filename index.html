@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Viral Commerce · Wi-Fi Money Group</title>
 <style>
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap");
+
 /* ===== Colorimetría: negro base, verdes del logo y líneas de color, tomados de los videos ===== */
 :root{
   --black:#0A0C0A;
@@ -27,11 +29,7 @@ body{
   margin:0;min-height:100vh;color:var(--text);
   font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   line-height:1.55;-webkit-font-smoothing:antialiased;
-  background:
-    radial-gradient(circle at 85% 0%,rgba(31,164,58,.20),transparent 38%),
-    radial-gradient(circle at 0% 100%,rgba(95,217,122,.10),transparent 40%),
-    var(--black);
-  background-attachment:fixed;
+  background:var(--black);
 }
 button{font:inherit;cursor:pointer}
 input,textarea,select{font:inherit}
@@ -46,7 +44,7 @@ input,textarea,select{font:inherit}
 }
 @keyframes shine{from{background-position:0% 50%}to{background-position:300% 50%}}
 
-/* ===== Botones premium: reflejo que sigue al cursor y destello al pasar ===== */
+/* ===== Botones premium: destello que sigue al cursor ===== */
 .shine-btn{
   position:relative;overflow:hidden;isolation:isolate;
   transition:transform .25s ease,box-shadow .35s ease,background-color .25s ease,color .25s ease,border-color .25s ease;
@@ -69,39 +67,39 @@ input,textarea,select{font:inherit}
 /* ===== Pantalla de acceso ===== */
 .gate{position:fixed;inset:0;background:var(--black);overflow:hidden;z-index:50}
 .gate[hidden]{display:none}
-.wall{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;gap:18px;opacity:.85;transform:rotate(-4deg) scale(1.15)}
+.wall{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;gap:18px;opacity:.85}
 .gate-shade{position:absolute;inset:0;pointer-events:none;background:
   linear-gradient(180deg,rgba(10,12,10,.30) 0%,rgba(10,12,10,.22) 50%,rgba(10,12,10,.38) 100%),
   radial-gradient(ellipse at center,rgba(10,12,10,0) 30%,rgba(10,12,10,.45) 100%)}
 .gate-center{position:relative;z-index:2;height:100%;display:flex;align-items:center;justify-content:center;padding:20px}
 .gate-card{
   width:min(420px,92vw);text-align:center;padding:32px 28px 28px;border-radius:20px;
-  background:rgba(12,15,12,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  background:rgba(12,15,12,.94);
   border:1px solid var(--line-strong);border-top:4px solid var(--green);
   box-shadow:0 30px 80px rgba(0,0,0,.6);
 }
 .gate-card img{height:72px;width:auto;background:#fff;border-radius:14px;padding:6px 10px}
 .gate-eyebrow{display:inline-block;margin:14px 0 0;font-size:.78rem;font-weight:800;letter-spacing:2.2px;text-transform:uppercase;color:var(--green-light)}
-.gate-card h1{font-size:1.8rem;margin:4px 0 0;font-weight:900;letter-spacing:.4px}
+.display{font-family:"Montserrat","Arial Black",Impact,sans-serif;font-weight:900;text-transform:uppercase;letter-spacing:3px}
+.gate-card h1{font-size:2.1rem;margin:4px 0 0;line-height:1.15}
 .gate-card .sub{color:var(--muted);margin:6px 0 20px}
 .gate-card input{width:100%;padding:14px 16px;border-radius:12px;border:1.5px solid #2A3A2E;background:var(--field);color:var(--text);font-size:1rem;text-align:center;letter-spacing:2px}
 .gate-card input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 4px rgba(31,164,58,.25)}
-.gate-card .go{width:100%;margin-top:14px;padding:14px;border:0;border-radius:12px;font-weight:800;font-size:1.02rem;color:#fff;background:linear-gradient(135deg,var(--green),var(--green-deep));box-shadow:0 10px 26px rgba(31,164,58,.35)}
+.gate-card .go{width:100%;margin-top:14px;padding:14px;border:0;border-radius:12px;font-family:"Montserrat","Arial Black",Impact,sans-serif;font-weight:900;letter-spacing:2px;text-transform:uppercase;font-size:1.02rem;color:#fff;background:linear-gradient(135deg,var(--green),var(--green-deep));box-shadow:0 10px 26px rgba(31,164,58,.35)}
 .gate-card .err{color:var(--error);font-weight:700;min-height:1.4em;margin-top:10px}
 .shake{animation:shake .4s}
 @keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
 
 /* ===== Filas de videos que avanzan ===== */
-.row{overflow:hidden;width:100%;mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
 .track{display:flex;width:max-content;animation:slide var(--dur,90s) linear infinite}
-.row:hover .track{animation-play-state:paused}
+.row{overflow:hidden;width:100%}
 @keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-.demo{flex:0 0 auto;width:170px;aspect-ratio:9/16;margin-right:16px;border-radius:16px;overflow:hidden;position:relative;background:var(--black);border:1px solid rgba(95,217,122,.25);box-shadow:0 10px 30px rgba(0,0,0,.5)}
-.demo video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:var(--black)}
+.demo{flex:0 0 auto;width:150px;aspect-ratio:9/16;margin-right:14px;border-radius:14px;overflow:hidden;position:relative;background:var(--black);border:1px solid rgba(95,217,122,.25)}
+.demo video,.demo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:var(--black)}
 
 /* ===== Aplicación ===== */
 .app[hidden]{display:none}
-.topbar{position:sticky;top:0;z-index:40;background:rgba(10,12,10,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.topbar{position:sticky;top:0;z-index:40;background:var(--black);border-bottom:1px solid var(--line)}
 .topbar-in{max-width:1080px;margin:0 auto;padding:10px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:1.02rem;margin-right:auto}
 .brand img{height:36px;width:auto;background:#fff;border-radius:8px;padding:3px 6px}
@@ -112,15 +110,16 @@ input,textarea,select{font:inherit}
 .logout{background:transparent;color:var(--green-light);border:1.5px solid var(--green);border-radius:999px;padding:8px 16px;font-weight:700}
 .logout:hover{background:rgba(31,164,58,.15);box-shadow:0 10px 24px rgba(31,164,58,.3)}
 
-.hero{position:relative;overflow:hidden;padding:30px 0 26px;background:var(--black)}
-.hero-title{position:relative;z-index:2;text-align:center;padding:22px 16px}
+.hero{padding:22px 0 8px;background:var(--black);position:relative}
+.hero.fade::before{content:"";position:absolute;left:0;right:0;top:0;height:120px;background:linear-gradient(to bottom,#000 0%,rgba(0,0,0,.85) 35%,rgba(0,0,0,.35) 70%,transparent 100%);pointer-events:none;z-index:2}
+.slot{width:100%}
+.slot:empty{display:none}
+.hero-title{text-align:center;padding:14px 16px 6px}
 .hero-title h1{font-size:clamp(2.2rem,6vw,3.8rem);margin:0;font-weight:900;letter-spacing:.5px;line-height:1.1}
 .hero-title p{color:var(--muted);margin:10px auto 0;max-width:620px}
-.hero .row{position:relative;z-index:1}
-.hero .demo{width:150px}
-.hero::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,var(--black) 0%,rgba(10,12,10,.35) 22%,rgba(10,12,10,.35) 78%,var(--black) 100%)}
+.hero .slot{margin-bottom:6px}
 
-main{max-width:960px;margin:0 auto;padding:26px 16px 60px}
+main{max-width:960px;margin:0 auto;padding:26px 16px 30px}
 .view[hidden]{display:none}
 section.card-block{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px;margin-bottom:20px;position:relative;overflow:hidden}
 section.card-block::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,var(--green-light),var(--green),var(--green-deep))}
@@ -164,7 +163,7 @@ pre{white-space:pre-wrap;word-wrap:break-word;background:var(--field);border:1px
 
 /* Cómo empezar */
 .steps{list-style:none;padding:0;margin:14px 0 0;display:grid;gap:10px}
-.step{display:flex;gap:14px;align-items:flex-start;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2);transition:background .2s,border-color .2s}
+.step{display:flex;gap:14px;align-items:flex-start;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2)}
 .step.done{background:rgba(31,164,58,.12);border-color:var(--green)}
 .step input{margin-top:6px;width:20px;height:20px;accent-color:var(--green);flex:0 0 auto}
 .step .n{flex:0 0 auto;width:34px;height:34px;border-radius:50%;background:var(--text);color:var(--black);font-weight:900;display:flex;align-items:center;justify-content:center}
@@ -181,11 +180,6 @@ pre{white-space:pre-wrap;word-wrap:break-word;background:var(--field);border:1px
 .do.no{border-top:4px solid var(--error)}
 .do ul{margin:8px 0 0;padding-left:18px;color:var(--muted);font-size:.94rem}
 
-/* Botón de sonido sobre cada video de formatos */
-.sound-btn{position:absolute;right:10px;bottom:10px;z-index:3;width:44px;height:44px;padding:0;border-radius:50%;border:1.5px solid var(--green-light);background:rgba(10,12,10,.72);color:var(--green-light);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.45)}
-.sound-btn svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;position:relative;z-index:1}
-.sound-btn[aria-pressed="true"]{background:var(--green);color:#fff;border-color:#fff}
-
 /* Formatos: cada uno con su video y su explicación */
 .engine{background:rgba(31,164,58,.12);border:1px solid var(--line-strong);border-radius:12px;padding:14px 16px;margin:0 0 6px;color:var(--muted)}
 .engine b{color:var(--green-light)}
@@ -197,6 +191,13 @@ pre{white-space:pre-wrap;word-wrap:break-word;background:var(--field);border:1px
 .fx dd{margin:2px 0 0;color:var(--muted)}
 .fx .num{display:inline-block;width:28px;height:28px;border-radius:50%;background:var(--green);color:#fff;text-align:center;line-height:28px;font-weight:900;margin-right:8px}
 .fx .go{margin-top:12px}
+.sound-btn{position:absolute;right:10px;bottom:10px;z-index:3;width:44px;height:44px;padding:0;border-radius:50%;border:1.5px solid var(--green-light);background:rgba(10,12,10,.8);color:var(--green-light);display:flex;align-items:center;justify-content:center}
+.sound-btn svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.restart-btn{right:64px}
+.fcard{flex:0 0 auto;width:150px;margin-right:14px}
+.fcard .demo{width:100%;margin-right:0}
+.fcap{margin:8px 0 0;text-align:center;font-size:.78rem;font-weight:700;line-height:1.25;color:var(--green-light);text-transform:uppercase;letter-spacing:.4px;min-height:2.5em}
+.sound-btn[aria-pressed="true"]{background:var(--green);color:#fff;border-color:#fff}
 .soon{border:1.5px dashed var(--line-strong);border-radius:14px;padding:18px;margin-top:14px;text-align:center;color:var(--muted)}
 
 /* Preguntas */
@@ -205,14 +206,13 @@ details[open]{border-color:var(--green)}
 summary{cursor:pointer;font-weight:800;color:var(--green-light)}
 details p{margin:8px 0 0;color:var(--muted)}
 
-.foot{color:var(--muted);font-size:.85rem;text-align:center;margin-top:24px}
+.foot{color:var(--muted);font-size:.85rem;text-align:center;padding:18px 16px 26px;border-top:1px solid var(--line)}
+.foot .slot{margin:0 0 16px}
 
 @media(max-width:640px){
   .brand span{display:none}
   .gate-card{padding:26px 20px}
-  .demo{width:140px}
-  .hero .demo{width:120px}
-  .wall{transform:rotate(-4deg) scale(1.3)}
+  .demo{width:120px}
   .fx{grid-template-columns:1fr}
   .fx .demo{width:100%;max-width:240px}
 }
@@ -230,8 +230,8 @@ details p{margin:8px 0 0;color:var(--muted)}
   <div class="gate-center">
     <div class="gate-card" id="gate-card">
       <img src="logo.png" alt="Wi-Fi Money Group">
-      <span class="gate-eyebrow">Viral Commerce</span>
-      <h1 class="shine">Wi-Fi Money Group</h1>
+      <span class="gate-eyebrow">Wi-Fi Money Group</span>
+      <h1 class="shine display">Viral Commerce</h1>
       <p class="sub">Escribe la contraseña de la comunidad para entrar.</p>
       <input id="pass" type="password" placeholder="Contraseña" autocomplete="current-password">
       <button class="go shine-btn" id="enter" type="button">Entrar</button>
@@ -258,12 +258,12 @@ details p{margin:8px 0 0;color:var(--muted)}
   </header>
 
   <div class="hero">
-    <div class="row-wrap" id="hero-top"></div>
+    <!-- Fila de videos arriba del título: solo aparece en el Generador -->
+    <div class="slot" id="hero-top"></div>
     <div class="hero-title">
       <h1 class="shine">Viral Commerce</h1>
-      <p>Mira cómo se ven los formatos antes de crear los tuyos. Luego genera tus prompts desde esta misma página.</p>
+      <p>Genera los prompts de tus videos desde esta página, o revisa cada formato antes de empezar.</p>
     </div>
-    <div class="row-wrap" id="hero-bottom"></div>
   </div>
 
   <main>
@@ -293,7 +293,7 @@ details p{margin:8px 0 0;color:var(--muted)}
         <div class="modes" role="radiogroup" aria-label="Cómo repartir por formato">
           <label class="mode shine-btn"><input type="radio" name="fmode" value="equal" checked> En partes iguales, dispersos en todos los formatos</label>
           <label class="mode shine-btn"><input type="radio" name="fmode" value="single"> Todos en un solo formato</label>
-          <label class="mode shine-btn"><input type="radio" name="fmode" value="manual"> Elegir cuántos van en cada formato</label>
+          <label class="mode shine-btn"><input type="radio" name="fmode" value="manual"> Elegir cuántos van en cada formato (más usado)</label>
         </div>
         <div id="single-wrap" hidden>
           <label for="format-single">Formato para todos los creativos</label>
@@ -314,6 +314,7 @@ details p{margin:8px 0 0;color:var(--muted)}
         <div class="btns"><button class="btn-d shine-btn" id="copy-all" type="button">Copiar todos</button></div>
         <div id="cards"></div>
       </section>
+
     </div>
 
     <!-- Cómo empezar -->
@@ -375,16 +376,17 @@ details p{margin:8px 0 0;color:var(--muted)}
       </section>
     </div>
 
-    <p class="foot">Wi-Fi Money Group · Viral Commerce</p>
   </main>
+
+  <footer class="foot">Wi-Fi Money Group · Viral Commerce</footer>
 </div>
 
 <script>
 /* ===== Acceso ===== */
 /* Contraseña universal guardada como SHA-256 (no se ve en el código).
-   Contraseña actual: WMG2026. Para cambiarla, calcula el SHA-256 de la nueva y reemplaza el valor.
+   Contraseña actual: solowifimoney. Para cambiarla, calcula el SHA-256 de la nueva y reemplaza el valor.
    Nota: es un filtro para el acceso casual. Un bloqueo real requiere un servidor con inicio de sesión. */
-const ACCESS_HASH = "773a6061dd8371e4a63b2ffe215955f2eee29049716c3ffc195cbc94faf75eff";
+const ACCESS_HASH = "762497dc504f1e05591c6e2f0dc4c80ab5bdb4ebe585e301c961dff83167581d";
 
 /* ===== Motor del kit ===== */
 const ENGINE_COMMAND = "/full-visual";
@@ -465,15 +467,15 @@ const FORMATS = [
   }
 ];
 
-/* Archivos de video de la galería y de los formatos. Se cargan solo cuando la tarjeta entra en pantalla. */
+/* Archivos de video. Se cargan solo cuando hacen falta. */
 const VIDEO_FILES = [
   "videos/v01.mp4", "videos/v02.mp4", "videos/v03.mp4", "videos/v04.mp4", "videos/v05.mp4",
   "videos/v06.mp4", "videos/v07.mp4", "videos/v08.mp4", "videos/v09.mp4", "videos/v10.mp4",
   "videos/v11.mp4", "videos/v12.mp4", "videos/v13.mp4", "videos/v14.mp4"
 ];
 
-/* Galería de la pantalla de acceso y del encabezado: una entrada por video. */
-const DEMOS = VIDEO_FILES.map((src, i) => ({ src, t: "Video " + (i + 1) }));
+/* Versión de calidad alta (480x854): acceso, filas de fondo y formatos. */
+const VIDEO_HD = VIDEO_FILES.map((f) => f.replace("videos/", "videos/hd/"));
 
 const $ = (id) => document.getElementById(id);
 
@@ -486,15 +488,18 @@ async function sha256(text) {
 
 function unlock() {
   $("gate").hidden = true;
+  $("gate-wall").innerHTML = "";          // libera los videos del acceso
   $("app").hidden = false;
   try { sessionStorage.setItem("wmg-auth", "1"); } catch (e) {}
-  window.scrollTo(0, 0);
+  showTab("gen", true);
 }
 
 function lock() {
   try { sessionStorage.removeItem("wmg-auth"); } catch (e) {}
   $("app").hidden = true;
+  unmountRows();
   $("gate").hidden = false;
+  buildPhotoWall($("gate-wall"), 4, 5, PHOTO_FILES);
   $("pass").value = "";
   $("gate-err").textContent = "";
   $("pass").focus();
@@ -526,26 +531,30 @@ function shakeCard() {
 }
 
 /* ===== Videos ===== */
-let videoObserver = null;
-function getVideoObserver() {
-  if (!videoObserver && "IntersectionObserver" in window) {
-    videoObserver = new IntersectionObserver((entries) => {
+const formatVideos = [];       // videos de la sección Formatos (se reproducen de uno en uno)
+let formatObserver = null;
+
+function getFormatObserver() {
+  if (!formatObserver && "IntersectionObserver" in window) {
+    formatObserver = new IntersectionObserver((entries) => {
       entries.forEach((en) => {
         const v = en.target;
         if (en.isIntersecting) {
           if (!v.src) v.src = v.dataset.src;
+          // Solo uno se reproduce a la vez, para que la página no se ponga lenta.
+          formatVideos.forEach((o) => { if (o !== v && o.muted) o.pause(); });
           v.play().catch(() => {});
         } else {
           v.pause();
         }
       });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.6 });
   }
-  return videoObserver;
+  return formatObserver;
 }
 
-/* eager: el video arranca de inmediato (fondos). Si no, solo se reproduce cuando está en pantalla. */
-function videoElement(src, label, eager) {
+/* eager: se reproduce de inmediato (filas de fondo). Si no, carga solo cuando se ve (formatos). */
+function videoElement(src, label, eager, paused) {
   const v = document.createElement("video");
   v.muted = true;
   v.setAttribute("muted", "");
@@ -554,52 +563,133 @@ function videoElement(src, label, eager) {
   v.setAttribute("playsinline", "");
   v.setAttribute("aria-label", label);
   if (eager) {
-    v.autoplay = true;
-    v.setAttribute("autoplay", "");
-    v.preload = "auto";
-    v.src = src;
-    v.play().catch(() => {});
+    // paused: el video se queda en un cuadro fijo y solo la fila se mueve.
+    v.preload = "metadata";
+    v.src = src + "#t=0.1";
+    if (!paused) {
+      v.autoplay = true;
+      v.setAttribute("autoplay", "");
+      v.preload = "auto";
+      v.src = src;
+      v.play().catch(() => {});
+    }
     return v;
   }
   v.preload = "none";
   v.dataset.src = src;
-  const obs = getVideoObserver();
+  formatVideos.push(v);
+  const obs = getFormatObserver();
   if (obs) {
     obs.observe(v);
   } else {
     v.src = src;
-    v.play().catch(() => {});
   }
   return v;
 }
 
-function demoCard(d) {
+function demoCard(src, label, paused) {
   const el = document.createElement("div");
   el.className = "demo";
-  el.appendChild(videoElement(d.src, d.t, true));
+  el.appendChild(videoElement(src, label, true, paused));
   return el;
 }
 
-/* Fila de videos que avanza. Cada fila empieza en un punto distinto de la lista. */
-function buildRow(container, offset, cards, dur) {
+/* Fila de videos que avanza. */
+function buildRow(container, offset, cards, dur, files, paused) {
   const row = document.createElement("div");
   row.className = "row";
   const track = document.createElement("div");
   track.className = "track";
   track.style.setProperty("--dur", dur + "s");
   const list = [];
-  for (let i = 0; i < cards; i++) list.push(DEMOS[(i + offset) % DEMOS.length]);
+  for (let i = 0; i < cards; i++) list.push(files[(i + offset) % files.length]);
   // Se duplica la lista para que el desplazamiento sea continuo.
-  [...list, ...list].forEach((d) => track.appendChild(demoCard(d)));
+  [...list, ...list].forEach((src, i) => track.appendChild(demoCard(src, "Video " + ((i % cards) + 1), paused)));
   row.appendChild(track);
   container.appendChild(row);
 }
 
-function buildWall(container, rows, cards) {
+/* Velocidades distintas por fila (en segundos por vuelta): unas rápidas y otras lentas. */
+const WALL_SPEEDS = [38, 96, 58, 124];
+
+function buildWall(container, rows, cards, files, paused) {
   container.innerHTML = "";
   for (let r = 0; r < rows; r++) {
-    buildRow(container, r * 3, cards, 70 + r * 18);
+    buildRow(container, r * 3, cards, WALL_SPEEDS[r % WALL_SPEEDS.length], files, paused);
   }
+}
+
+/* Login: fotos fijas (WebP) en lugar de videos. Las filas siguen avanzando. */
+const PHOTO_FILES = Array.from({ length: 14 }, (_, i) => "fotos/v" + String(i + 1).padStart(2, "0") + ".webp");
+
+function photoCard(src) {
+  const el = document.createElement("div");
+  el.className = "demo";
+  const img = document.createElement("img");
+  img.src = src;
+  img.alt = "";
+  img.decoding = "async";
+  el.appendChild(img);
+  return el;
+}
+
+function buildPhotoWall(container, rows, cards, files) {
+  container.innerHTML = "";
+  for (let r = 0; r < rows; r++) {
+    const row = document.createElement("div");
+    row.className = "row";
+    const track = document.createElement("div");
+    track.className = "track";
+    track.style.setProperty("--dur", WALL_SPEEDS[r % WALL_SPEEDS.length] + "s");
+    const offset = r * 3;
+    const list = [];
+    for (let i = 0; i < cards; i++) list.push(files[(i + offset) % files.length]);
+    [...list, ...list].forEach((src) => track.appendChild(photoCard(src)));
+    row.appendChild(track);
+    container.appendChild(row);
+  }
+}
+
+/* Fila de imágenes con el nombre de cada formato, arriba del título: solo en el Generador. */
+function formatCard(f) {
+  const wrap = document.createElement("div");
+  wrap.className = "fcard";
+  const box = document.createElement("div");
+  box.className = "demo";
+  const img = document.createElement("img");
+  img.src = "fotos/v" + String(f.video + 1).padStart(2, "0") + ".webp";
+  img.alt = f.name;
+  img.decoding = "async";
+  box.appendChild(img);
+  const cap = document.createElement("p");
+  cap.className = "fcap";
+  cap.textContent = f.name;
+  wrap.append(box, cap);
+  return wrap;
+}
+
+function buildFormatRow(container, offset, cards, dur) {
+  const row = document.createElement("div");
+  row.className = "row";
+  const track = document.createElement("div");
+  track.className = "track";
+  track.style.setProperty("--dur", dur + "s");
+  const list = [];
+  for (let i = 0; i < cards; i++) list.push(FORMATS[(i + offset) % FORMATS.length]);
+  [...list, ...list].forEach((f) => track.appendChild(formatCard(f)));
+  row.appendChild(track);
+  container.appendChild(row);
+}
+
+function mountRows() {
+  document.querySelector(".hero").classList.add("fade");
+  $("hero-top").innerHTML = "";
+  buildFormatRow($("hero-top"), 0, FORMATS.length, 80);
+}
+
+function unmountRows() {
+  document.querySelector(".hero").classList.remove("fade");
+  $("hero-top").innerHTML = "";
 }
 
 /* ===== Reparto por formato ===== */
@@ -703,7 +793,7 @@ function refreshCounts(resetManual) {
 function buildPrompt(p, format, index, total) {
   const link = p.link ? p.link : "no se entregó enlace; usa solo la descripción";
   return [
-    ENGINE_COMMAND + " Crea un video explicativo sobre el producto \"" + p.name + "\" para la comunidad Wi-Fi Money Group.",
+    ENGINE_COMMAND + " Crea un video explicativo sobre el producto \"" + p.name + "\".",
     "",
     "Creativo " + (index + 1) + " de " + total + ".",
     "Formato: " + format.name,
@@ -826,7 +916,8 @@ function generate() {
 
 /* ===== Sonido de los videos de formatos: solo uno suena a la vez ===== */
 const ICON_MUTED = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>';
-const ICON_ON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>';
+const ICON_RESTART = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><polyline points="3 4 3 10 9 10"/></svg>';
+const ICON_ON ='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>';
 const soundItems = [];
 
 function attachSound(wrapper, v) {
@@ -865,9 +956,19 @@ function renderFormats() {
     const box = document.createElement("div");
     const wrap = document.createElement("div");
     wrap.className = "demo";
-    const fv = videoElement(VIDEO_FILES[f.video], f.name, false);
+    const fv = videoElement(VIDEO_HD[f.video], f.name, false);
     wrap.appendChild(fv);
     attachSound(wrap, fv);
+    const rb = document.createElement("button");
+    rb.type = "button";
+    rb.className = "sound-btn shine-btn restart-btn";
+    rb.setAttribute("aria-label", "Reiniciar el video");
+    rb.innerHTML = ICON_RESTART;
+    rb.addEventListener("click", () => {
+      try { fv.currentTime = 0; } catch (e) {}
+      fv.play().catch(() => {});
+    });
+    wrap.appendChild(rb);
     box.appendChild(wrap);
 
     const body = document.createElement("div");
@@ -991,14 +1092,15 @@ function renderFaq() {
 }
 
 /* ===== Pestañas ===== */
-function showTab(name) {
+function showTab(name, silent) {
   document.querySelectorAll(".view").forEach((v) => {
     v.hidden = v.dataset.view !== name;
   });
   document.querySelectorAll(".tab").forEach((t) => {
     t.classList.toggle("on", t.dataset.tab === name);
   });
-  window.scrollTo({ top: document.querySelector(".hero").offsetHeight - 10, behavior: "smooth" });
+  if (name === "gen") mountRows(); else unmountRows();
+  if (!silent) window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 /* ===== Guardado del formulario ===== */
@@ -1048,7 +1150,6 @@ function initApp() {
   renderSteps();
   renderFaq();
   loadForm();
-  initShineButtons();
 
   document.querySelectorAll(".tab").forEach((t) => {
     t.addEventListener("click", () => showTab(t.dataset.tab));
@@ -1062,16 +1163,14 @@ function initApp() {
 }
 
 function initGate() {
-  buildWall($("gate-wall"), 4, 5);
-  buildRow($("hero-top"), 0, 6, 80);
-  buildRow($("hero-bottom"), 6, 6, 95);
+  buildPhotoWall($("gate-wall"), 4, 5, PHOTO_FILES);
   $("enter").addEventListener("click", tryEnter);
   $("pass").addEventListener("keydown", (e) => { if (e.key === "Enter") tryEnter(); });
-  initShineButtons();
 }
 
-initGate();
+initShineButtons();
 initApp();
+initGate();
 let authed = false;
 try { authed = sessionStorage.getItem("wmg-auth") === "1"; } catch (e) {}
 if (authed) unlock(); else $("pass").focus();
