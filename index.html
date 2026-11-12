@@ -110,7 +110,10 @@ input,textarea,select{font:inherit}
 .logout{background:transparent;color:var(--green-light);border:1.5px solid var(--green);border-radius:999px;padding:8px 16px;font-weight:700}
 .logout:hover{background:rgba(31,164,58,.15);box-shadow:0 10px 24px rgba(31,164,58,.3)}
 
-.hero{padding:22px 0 8px;background:var(--black);position:relative}
+.hero{padding:22px 0 8px;background:transparent;position:relative}
+#bg-wall{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;display:flex;flex-direction:column;justify-content:center;gap:14px;opacity:.6}
+#bg-wall::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.35),rgba(0,0,0,.6))}
+#app{position:relative;z-index:1}
 .hero.fade::before{content:"";position:absolute;left:0;right:0;top:0;height:120px;background:linear-gradient(to bottom,#000 0%,rgba(0,0,0,.85) 35%,rgba(0,0,0,.35) 70%,transparent 100%);pointer-events:none;z-index:2}
 .slot{width:100%}
 .slot:empty{display:none}
@@ -633,6 +636,30 @@ function photoCard(src) {
   return el;
 }
 
+/* Fondo fijo detrás de toda la app (después del acceso): fotos distintas, 4 filas. */
+const BG_FILES = [];
+for (let v = 1; v <= 14; v++) {
+  for (let i = 1; i <= 4; i++) BG_FILES.push("fotos/v" + String(v).padStart(2, "0") + "-" + i + ".webp");
+}
+
+function buildBgWall() {
+  const bg = document.createElement("div");
+  bg.id = "bg-wall";
+  bg.setAttribute("aria-hidden", "true");
+  for (let r = 0; r < 4; r++) {
+    const list = BG_FILES.slice(r * 14, r * 14 + 14);
+    const row = document.createElement("div");
+    row.className = "row";
+    const track = document.createElement("div");
+    track.className = "track";
+    track.style.setProperty("--dur", WALL_SPEEDS[r % WALL_SPEEDS.length] + "s");
+    [...list, ...list].forEach((src) => track.appendChild(photoCard(src)));
+    row.appendChild(track);
+    bg.appendChild(row);
+  }
+  document.body.prepend(bg);
+}
+
 function buildPhotoWall(container, rows, cards, files) {
   container.innerHTML = "";
   for (let r = 0; r < rows; r++) {
@@ -682,13 +709,10 @@ function buildFormatRow(container, offset, cards, dur) {
 }
 
 function mountRows() {
-  document.querySelector(".hero").classList.add("fade");
   $("hero-top").innerHTML = "";
-  buildFormatRow($("hero-top"), 0, FORMATS.length, 80);
 }
 
 function unmountRows() {
-  document.querySelector(".hero").classList.remove("fade");
   $("hero-top").innerHTML = "";
 }
 
@@ -1163,6 +1187,7 @@ function initApp() {
 }
 
 function initGate() {
+  if (!document.getElementById("bg-wall")) buildBgWall();
   buildPhotoWall($("gate-wall"), 4, 5, PHOTO_FILES);
   $("enter").addEventListener("click", tryEnter);
   $("pass").addEventListener("keydown", (e) => { if (e.key === "Enter") tryEnter(); });
